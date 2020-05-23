@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visitors-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: visitors-operator
+  template:
+    metadata:
+      labels:
+        app: visitors-operator
+    spec:
+      containers:
+      - name: operator
+        image: python:2.7
+        command: ["python", "/hooks/sync.py"]
+        volumeMounts:
+        - name: hooks
+          mountPath: /hooks
+      volumes:
+      - name: hooks
+        configMap:
+          name: visitors-operator
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: visitors-operator
+spec:
+  selector:
+    app: visitors-operator
+  ports:
+  - port: 80
