@@ -297,10 +297,10 @@ class Controller(BaseHTTPRequestHandler):
     if children["Deployment.apps/v1"].get("mysql", {}).get("status", {}).get("readyReplicas", 0) != 1:
       return {"status": desired_status, "children": desired_objs, "resyncAfterSeconds": 5}
 
-    _backend_manifest[0]["spec"]["replicas"] = parent.get("sepc", {}).get("size", _default_size)
+    _backend_manifest[0]["spec"]["replicas"] = parent.get("spec", {}).get("size", _default_size)
     desired_objs.extend(_backend_manifest)
 
-    _frontend_manifest[0]["spec"]["template"]["spec"]["containers"][0]["env"][0]["value"] = parent.get("sepc", {}).get("title", _default_title)
+    _frontend_manifest[0]["spec"]["template"]["spec"]["containers"][0]["env"][0]["value"] = parent.get("spec", {}).get("title", _default_title)
     desired_objs.extend(_frontend_manifest)
 
     return {"status": desired_status, "children": desired_objs}
