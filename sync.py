@@ -293,7 +293,7 @@ class Controller(BaseHTTPRequestHandler):
     desired_objs = _mysql_manifest
 
     # Check if mysql is up
-    if not children["Deployment.apps/v1"].has_key("visitors-mysql"):
+    if children["Deployment.apps/v1"].get("mysql", {}).get("status", {}).get("readyReplicas", 0) != 1:
       return {"status": desired_status, "children": desired_objs, "resyncAfterSeconds": 5}
 
     _backend_manifest[0]["spec"]["replicas"] = parent.get("sepc", {}).get("size", _default_size)
