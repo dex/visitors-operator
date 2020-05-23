@@ -290,7 +290,8 @@ class Controller(BaseHTTPRequestHandler):
       "frontendImage": _frontendImage
     }
 
-    desired_objs = _mysql_manifest
+    desired_objs = []
+    desired_objs.extend(_mysql_manifest)
 
     # Check if mysql is up
     if children["Deployment.apps/v1"].get("mysql", {}).get("status", {}).get("readyReplicas", 0) != 1:
@@ -299,7 +300,7 @@ class Controller(BaseHTTPRequestHandler):
     _backend_manifest[0]["spec"]["replicas"] = parent.get("sepc", {}).get("size", _default_size)
     desired_objs.extend(_backend_manifest)
 
-    _frontend_manifest[0]["spec"]["template"]["spec"]["containers"][0]["env"][0].value = parent.get("sepc", {}).get("title", _default_title)
+    _frontend_manifest[0]["spec"]["template"]["spec"]["containers"][0]["env"][0]["value"] = parent.get("sepc", {}).get("title", _default_title)
     desired_objs.extend(_frontend_manifest)
 
     return {"status": desired_status, "children": desired_objs}
