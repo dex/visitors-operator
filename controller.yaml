@@ -18,8 +18,6 @@ spec:
       method: Recreate
   - apiVersion: v1
     resource: secrets
-    updateStrategy: 
-      method: Recreate
   hooks:
     sync:
       webhook:
