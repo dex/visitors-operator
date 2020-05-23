@@ -1,0 +1,23 @@
+apiVersion: metacontroller.k8s.io/v1alpha1
+kind: CompositeController
+metadata:
+  name: visitors-operator
+spec:
+  generateSelector: true
+  parentResource:
+    apiVersion: example.com/v1
+    resource: visitorsapps
+  childResources:
+  - apiVersion: apps/v1
+    resource: deployments
+    updateStrategy: InPlace
+  - apiVersion: v1
+    resource: services
+    updateStrategy: Recreate
+  - apiVersion: v1
+    resource: secrets
+    updateStrategy: Recreate
+  hooks:
+    sync:
+      webhook:
+        url: http://visitors-operator/sync
